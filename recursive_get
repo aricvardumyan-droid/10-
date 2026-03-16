@@ -1,0 +1,16 @@
+class NotFound: ...
+
+
+def get(data: dict | list | tuple, *field_path, default=None):
+    for field in field_path:
+        if isinstance(data, dict):
+            data = data.get(field, NotFound())
+            if isinstance(data, NotFound):
+                return default
+        elif isinstance(data, (tuple, list)):
+            if not isinstance(field, int): raise ValueError(f'Non-int index of an array: {field}')
+            if field >= len(data) or field < -len(data): return default
+            data = data[field]
+        else:
+            raise NotImplementedError(str(data))
+    return data
